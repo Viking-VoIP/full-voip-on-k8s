@@ -23,7 +23,7 @@ spec:
         app: sip-proxy
     spec:
       containers:
-        - image: davidcsi/sip-proxy
+        - image: vikingvoip/sip-proxy
           name: sip-proxy
           securityContext:
             privileged: true

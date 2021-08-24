@@ -23,7 +23,7 @@ spec:
         app: sip-b2bua
     spec:
       containers:
-        - image: davidcsi/sip-b2bua
+        - image: vikingvoip/sip-b2bua
           imagePullPolicy: Always
           volumeMounts:
           - name: fslogs

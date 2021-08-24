@@ -41,7 +41,7 @@ spec:
         app: config-server-app
     spec:
       containers:
-      - image: davidcsi/config-server
+      - image: vikingvoip/config-server
         imagePullPolicy: Always
         name: config-server
         ports:
