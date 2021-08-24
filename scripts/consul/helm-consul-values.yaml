@@ -1,0 +1,22 @@
+
+global:
+  datacenter: voip-full
+  imageK8S: "hashicorp/consul-k8s:0.26.0"
+
+ui:
+  service:
+    enabled: true
+    type: 'LoadBalancer'
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  nodeSelector: 
+    application: "support"
+
+server:
+  replicas: 3
+  nodeSelector: |
+    application: "support"
+
+client:
+  enabled: false
+  extraConfig: |
+    {"advertise_reconnect_timeout": "15m"}

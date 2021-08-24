@@ -1,0 +1,50 @@
+# Service definition
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server-service
+  namespace: default
+  annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+      #external-dns.alpha.kubernetes.io/hostname: myservice.massphoning.local
+spec:
+  selector:
+    app: config-server-app
+  ports:
+  - protocol: "TCP"
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  labels:
+    app: config-server-app
+  name: config-server-app
+  namespace: default
+spec:
+  minReadySeconds: 10
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: config-server-app
+    spec:
+      containers:
+      - image: davidcsi/config-server
+        imagePullPolicy: Always
+        name: config-server
+        ports:
+        - containerPort: 8080
+      nodeSelector:
+        application: backend

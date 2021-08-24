@@ -1,0 +1,52 @@
+{
+    "local_subscribers_regexp": "^7[0-9]{8}",
+
+    "db_instance_name": "backend-db",
+    "db_instance_type": "db.t2.micro",
+    "db_disk_size": "40",
+    "db_username": "admin",
+    "db_password": "AbC123fgh#",
+
+    "region" : "us-east-1",
+    "vpc_cidr" : "10.0.0.0/16",
+    "environment" : "dev",
+    "availability_zones" : [ "us-east-1a", "us-east-1b", "us-east-1c" ],
+    "public_subnets_cidr" : ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"],
+    "private_subnets_cidr" : ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"],
+
+    "eks_cluster_name": "dev-cluster",
+    "eks_workers": {
+        "support": {
+            "instance_type": "t2.micro",
+            "desired_capacity": "3",
+            "min_capacity": "3",
+            "max_capacity": "3",
+            "disk_size": "20",
+            "ssh_key_name": "development-ssh-key-macmini"
+        },
+        "backend": {
+            "instance_type": "t2.small",
+            "desired_capacity": "1",
+            "min_capacity": "1",
+            "max_capacity": "1",
+            "disk_size": "40",
+            "ssh_key_name": "development-ssh-key-macmini"
+        },
+        "sip-proxy": {
+            "instance_type": "t2.small",
+            "desired_capacity": "1",
+            "min_capacity": "1",
+            "max_capacity": "1",
+            "disk_size": "40",
+            "ssh_key_name": "development-ssh-key-macmini"
+        },
+        "sip-b2bua": {
+            "instance_type": "t2.small",
+            "desired_capacity": "1",
+            "min_capacity": "1",
+            "max_capacity": "1",
+           "disk_size": "40",
+           "ssh_key_name": "development-ssh-key-macmini"
+        }
+    }
+}

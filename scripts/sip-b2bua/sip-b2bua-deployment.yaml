@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations: {}
+  labels:
+    app: sip-b2bua
+  name: sip-b2bua
+  namespace: default
+spec:
+  minReadySeconds: 10
+  #replicas: 1
+  selector:
+    matchLabels:
+      app: sip-b2bua
+  #strategy:
+  #  rollingUpdate:
+  #    maxSurge: 0
+  #    maxUnavailable: 1
+  #  type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sip-b2bua
+    spec:
+      containers:
+        - image: davidcsi/sip-b2bua
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: fslogs
+            mountPath: /fslogs
+          name: sip-b2bua
+          securityContext:
+            privileged: true
+      volumes:
+      - name: fslogs
+        hostPath:
+          path: /var/log/freeswitch
+          type: DirectoryOrCreate
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        application: b2bua
+      
