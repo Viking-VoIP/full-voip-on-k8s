@@ -31,7 +31,7 @@ The clients will register (if configured) on the Proxy's public IP address. When
 
 Clone the repo
 
-```git clone git@github.com:davidcsi/voip-full-k8s.git```
+```git clone git@github.com:Viking-VoIP/full-voip-on-k8s.git```
 
 cd into the terraform project folder:
 
