@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "terraform_state_s3" {
   #make sure you give unique bucket name
-  bucket = "terraform-bucket-lock" 
+  bucket = "${var.s3_bucket_name}" 
   force_destroy = true
 
   # Enable versioning to see full revision history of our state files
@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "terraform_state_s3" {
 
 resource "aws_dynamodb_table" "terraform_locks" {
 # Give unique name for dynamo table name
-  name         = "tf-up-and-run-locks"
+  name         = "${var.dynamodb_lock}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
   attribute {

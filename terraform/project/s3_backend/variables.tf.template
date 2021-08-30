@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "tf_state_s3" {
-    default = 
+    default = {{ BUCKET_NAME }}
 }
 
 variable "tf_dynamodb_lock" {
