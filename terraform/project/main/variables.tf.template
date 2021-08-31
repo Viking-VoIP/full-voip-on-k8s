@@ -52,8 +52,8 @@ variable "s3_backend" {
         dynamodb_table = string
     })
     default = {
-      dynamodb_table = "tf-remote-state-lock-3881900019"
-      s3_bucket_name = "terraform-bucket-lock-3881900019"
+      dynamodb_table = {{ DYNAMODB_LOCK }}
+      s3_bucket_name = {{ BUCKET_NAME }}
     }
 }
 

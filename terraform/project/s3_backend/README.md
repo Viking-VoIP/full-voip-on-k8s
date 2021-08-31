@@ -15,7 +15,7 @@ This project will create the necessary S3 bucket and DynamoDB backend for Terraf
 
  Where `XXXXXXXXXX` will be random numbers (same for both) so as not to conflict with existing buckets out there in the wild.
 
- Then it will set the s3 backend on the `main` project by sed'ing `../s3_backend_provisioning/variables.tf`.
+ Then it will set the s3 backend on the `main` project by sed'ing `../main/variables.tf.template` into `../main/variables.tf`.
 
 __Note:__ Bucket Name random digits will be changed
 
