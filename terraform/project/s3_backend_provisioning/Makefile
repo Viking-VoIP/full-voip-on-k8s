@@ -1,4 +1,4 @@
-SHELL := /usr/bin/env bash -e
+SHELL := /usr/bin/env bash
 
 #NDEF = $(if $(value $(1)),,$(error $(1) not set))
 
@@ -13,13 +13,8 @@ validate:
 	@terraform validate
 
 apply:
-	echo @terraform apply -auto-approve
-	echo "davd"
-	S3_BUCKET_NAME_STATE=$(shell terraform output -json | jq '.S3_Bucket.value')
-	DYNAMODB_LOCK=$(shell terraform output -json | jq '.dynamo_db_lock.value')
-	RET=$(shell sed "s/{{ BUCKET_NAME }}/$$S3_BUCKET_NAME_STATE/g;" ../s3_backend/variables.tf.template > ../s3_backend/variables.tf)
-	echo "RET=$${RET}"
-	## s|{{ DYNAMODB_LOCK }}|$$(DYNAMODB_LOCK)|g' 
+	#@terraform apply -auto-approve
+	$(shell sed "s/{{ BUCKET_NAME }}/$$(terraform output -json | jq '.S3_Bucket.value')/g; s/{{ DYNAMODB_LOCK }}/$$(terraform output -json | jq '.dynamo_db_lock.value')/g" ../s3_backend/variables.tf.template > ../s3_backend/variables.tf)
 
 destroy:
 	@terraform destroy -auto-approve
