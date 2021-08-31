@@ -3,13 +3,19 @@ S3 Backend Configuration for Terraform State
 
 Issue this command when initializing the project:
 
-`terraform init --backend-config="dynamodb_table=tf-remote-state-lock" --backend-config="bucket=tc-remotestate-7653"`
+`make init`
+
+Once init'ed, apply with:
+
+`make apply`
+
+This project will create the necessary S3 bucket and DynamoDB backend for Terraform. 
+- It will create an S3 bucket as `terraform-bucket-lock-XXXXXXXXXX`
+- It will create a DynamoDB table named `tf-remote-state-lock-XXXXXXXXXX`
+
+ Where `XXXXXXXXXX` will be random numbers (same for both) so as not to conflict with existing buckets out there in the wild.
+
+ Then it will set the s3 backend on the `main` project by sed'ing `../s3_backend_provisioning/variables.tf`.
 
 __Note:__ Bucket Name random digits will be changed
 
-Folder Named _"Backend"_ used to add the backend configuration to the repository and, this repository code is to create the  backend infrastructure <br/>
-
-Simply Create the infrastructure with this code and copy the file inside the _"Backend"_ folder to the TF code which needs to have the backend configuration and issue the above init command. 
-
-View my blog article for more information:
-[How To Configure Terraform AWS Backend With S3 And DynamoDB Table](https://www.techcrumble.net/2020/01/how-to-configure-terraform-aws-backend-with-s3-and-dynamodb-table/)
