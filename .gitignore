@@ -8,7 +8,7 @@
 *.tfstate.*
 terraform-state.json
 # ignore templates output
-terraform/project/main/variables.tf
+terraform/project/main/main.tf
 # Crash log files
 crash.log
 

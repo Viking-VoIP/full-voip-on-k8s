@@ -46,17 +46,6 @@ variable "private_subnets_cidr" {
     type = list(string)
 }
 
-variable "s3_backend" {
-    type = object({
-        s3_bucket_name = string
-        dynamodb_table = string
-    })
-    default = {
-      dynamodb_table = {{ DYNAMODB_LOCK }}
-      s3_bucket_name = {{ BUCKET_NAME }}
-    }
-}
-
 variable "eks_workers" { 
     type = object({
         support = object({

@@ -8,4 +8,3 @@ variable "aws_dynamodb_table" {
 variable "s3_bucket_name" {
   default = "terraform-bucket-lock"
 }
-
