@@ -65,4 +65,4 @@ This will launch the deployment process.
 
 If everything goes OK, you will get an output of your setup, you should save this somewhere safe.
 
-*NOTE*: If you don't change dev.vars.json, but I'd recommend at least chnaging the admin db password.
+*NOTE*: You should at least change dev.vars.json for the db password.
