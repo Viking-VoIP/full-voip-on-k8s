@@ -41,9 +41,12 @@ init-main: apply-backend
 apply-main: init-main
 	@echo "$(WARN_COLOR)WARNING:$(NO_COLOR) Applying $(OK_COLOR)main$(NO_COLOR) project -- Tnis will create all required resources on AWS."
 	@cd terraform/project/main && $(MAKE) apply && echo $(call report_success,"Main","Apply") || (echo $(call report_failure,"Main","Apply") && exit -1)
-	@cd scripts && $(shell bash init.sh) && echo $(call report_success,"Scripts","Execute") || (echo $(call report_failure,"Scripts","Execute") && exit -1)
+	cd scripts; bash ./init.sh && echo $(call report_success,"Scripts","Execute") || (echo $(call report_failure,"Scripts","Execute") && exit -1)
 
-destroy:
+init-script:
+	cd scripts; bash ./init.sh && echo $(call report_success,"Scripts","Execute") || (echo $(call report_failure,"Scripts","Execute") && exit -1)
+
+destroy-backend:
 	@echo '$(ERROR_COLOR)***** WARNING: This will DESTROY all resources!$(ERROR_COLOR) *****'
 
 	@# Let' ask the user if we should continue, since this is going to destroy everything
@@ -57,8 +60,25 @@ destroy:
 	fi \
 	fi
 	@cd terraform/project/s3_backend && $(MAKE) destroy && echo "$(OK_COLOR)RESULT:$(NO_COLOR) $(HIGHLIGHT_COLOR)Backend$(NO_COLOR) Destroy Success" || echo "$(ERROR_COLOR)RESULT:$(ERROR_COLOR) $(HIGHLIGHT_COLOR)Backend$(NO_COLOR) Destroy Failed, exiting..."
-	@cd terraform/project/main && $(MAKE) destroy && echo "$(OK_COLOR)RESULT:$(NO_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Success" || echo "$(ERROR_COLOR)RESULT:$(ERROR_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Failed, exiting..."
 	
+destroy-main:
+	@echo '$(ERROR_COLOR)***** WARNING: This will DESTROY all resources!$(ERROR_COLOR) *****'
+
+	@# Let' ask the user if we should continue, since this is going to destroy everything
+
+	@while [ -z "$$CONTINUE" ]; do \
+		read -r -p "Type anything but Y or y to exit. [y/N] " CONTINUE; \
+	done ; \
+	if [ ! $$CONTINUE == "y" ]; then \
+	if [ ! $$CONTINUE == "Y" ]; then \
+		echo "Exiting." ; exit 1 ; \
+	fi \
+	fi
+	@cd terraform/project/main && $(MAKE) destroy && echo "$(OK_COLOR)RESULT:$(NO_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Success" || echo "$(ERROR_COLOR)RESULT:$(ERROR_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Failed, exiting..."
+
+destroy-all: destroy-main destroy-backend
+	
+
 clean:
 	@cd terraform/project/main && rm -rf .terraform/ terraform.tfstate* .terraform*
 	@cd terraform/project/s3_backend && rm -rf .terraform/ terraform.tfstate* .terraform*

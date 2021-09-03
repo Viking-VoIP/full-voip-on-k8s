@@ -20,6 +20,7 @@ The clients will register (if configured) on the Proxy's public IP address. When
 ## 
 
 - You need to have an AWS account properly configured in your CLI.
+- The AWS account secret_access_key and accrss_key_id should already be properly configured in your ~/.aws/credential file.
 - Said account must have all permissions to create a VPC, routing tables, EKS cluster, ASGs, etc.
 - You must have installed and properly configured the following:
   - helm (https://helm.sh/docs/intro/install/)
@@ -31,35 +32,37 @@ The clients will register (if configured) on the Proxy's public IP address. When
 
 Clone the repo
 
-```git clone git@github.com:Viking-VoIP/full-voip-on-k8s.git```
+```git clone git@github.com:Viking-VoIP/full-voip-on-k8s.git viking-voip```
 
-cd into the terraform project folder:
+cd into the project folder:
 
-```cd terraform/project/main```
+```cd viking-voip```
 
 *IMPORTANT*: The variable file contains all the information needed to deploy the complete solution. There are parameters you will probably want to change.
 
 Use your favorite edit to edit the variables file:
 
-`dev.vars.json`
-
-
+`terraform/project/main/dev.vars.json`
 
 ---
 # Deploy
-## 
+## Makefile
 
-Execute terraform:
+- ```make help```: Will give you all possible directives, i.e.:
+- ```make init-backend```: Will initialize the s3_backend, meaning preparing all plugins needed by terraform.
+- ```make apply-backend```: Will apply the s3_backend terraform. This will create an S3 bucket and a DynamoDB table which are used to keep track of the state of terraform deployments in relation to resrouces in AWS. (Includes all previous directives)
+- ```make init-main```: Will initialize the main projecyt, meaning preparing all plugins needed by that terraform project.
+- ```make apply-backend```: Will apply the main terraform project. This will create all needed resources to deploy the whole eks platform.
+- ```make destroy-main```: Will delete all resources previously created by the main project. (it is possible the destroy doesn't work because sometimes a previsouly created ELB is not destroyed. If this happens, you will need to manually delete the ELB and execute the destroy agaon. We're investigating into that.)
+- ```make destroy-backend```: Will delete the backend resources created for state management.
 
-```terraform apply -var-file=dev.vars.json```
+
+To build the whole project simply execute:
+
+```make apply-main``` 
+
+This will launch the deployment process.
 
 If everything goes OK, you will get an output of your setup, you should save this somewhere safe.
-
-Then cd into `scripts` by doing ```cd ../../../scripts```
-Here, you want to execute:
-
-```bash init.sh```
-
-
 
 *NOTE*: If you don't change dev.vars.json, but I'd recommend at least chnaging the admin db password.

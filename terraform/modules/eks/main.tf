@@ -46,6 +46,9 @@ EOT
       labels = {
         application = "support"
       }
+      root_block_device = {
+        delete_on_termination = true
+      }
     },
     {
       name                          = "backend"
@@ -73,6 +76,9 @@ EOT
       labels = {
         application = "backend"
       }
+      root_block_device = {
+        delete_on_termination = true
+      }
     },
     {
       name                          = "sip-proxy"
@@ -99,6 +105,9 @@ EOT
       ]
       labels = {
         application = "proxy"
+      }
+      root_block_device = {
+        delete_on_termination = true
       }
     },
     {

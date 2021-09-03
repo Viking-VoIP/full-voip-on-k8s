@@ -13,10 +13,10 @@ validate:
 	@terraform validate
 
 apply:
-	@terraform apply -var-file=dev.vars.json
+	@terraform apply -auto-approve -var-file=dev.vars.json
 
 destroy:
-	@terraform destroy -auto-approve
+	@terraform destroy -auto-approve   -var-file=dev.vars.json
 
 clean:
-	@rm -rf .terraform/ terraform.tfstate*
+	@rm -rf .terraform* terraform.tfstate*
