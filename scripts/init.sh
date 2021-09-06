@@ -86,15 +86,6 @@ sleep 5 # sleep 5 # read -p "Press enter to continue"
 echo "--> Wait for consul-server is running..."
 until [ "1" -eq "$(kubectl get pod consul-consul-server-0 | grep Running | wc -l)" ]; do echo "Waiting for consul server to be running..." && sleep 30; done
 
-# Push Database params to consul
-echo "--> Push Database params to consul..."
-
-### Get a consul pod (we haven't yet deployed anything)
-kubectl exec -t consul-consul-server-0 -- /bin/consul kv put backend/db_address $DB_ADDRESS
-kubectl exec -t consul-consul-server-0 -- /bin/consul kv put backend/db_user $DB_USER
-kubectl exec -t consul-consul-server-0 -- /bin/consul kv put backend/db_pass $DB_PASSWD
-kubectl exec -t consul-consul-server-0 -- /bin/consul kv put voice/local_subscribers_regexp $LOCAL_SUBSCRIBERS_REGEXP
-
 sleep 5 # sleep 5 # read -p "Press enter to continue"
 
 # Deploy sip-proxy
@@ -113,11 +104,22 @@ sleep 5 # sleep 5 # read -p "Press enter to continue"
 echo "--> Deploy config-server..."
 for yaml in $(find config-server/*.yaml); do kubectl apply -f $yaml; done
 
+export SIP_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:aws:autoscaling:groupName,Values=*sip-proxy*" | jq '.Reservations[].Instances[].PublicIpAddress')
+
+# Push Database params to consul
+echo "--> Push Database params to consul..."
+
+### Get a consul pod (we haven't yet deployed anything)
+kubectl exec -t consul-consul-server-0 -- /bin/consul kv put backend/db_address $DB_ADDRESS
+kubectl exec -t consul-consul-server-0 -- /bin/consul kv put backend/db_user $DB_USER
+kubectl exec -t consul-consul-server-0 -- /bin/consul kv put backend/db_pass $DB_PASSWD
+kubectl exec -t consul-consul-server-0 -- /bin/consul kv put voice/local_subscribers_regexp $LOCAL_SUBSCRIBERS_REGEXP
+kubectl exec -t consul-consul-server-0 -- /bin/consul kv put voice/proxy-public-ip $SIP_PUBLIC_IP
+
+
 # Output the SIP-PROXY's Public IP Address
 echo "--> Output the SIP-PROXY's Public IP Address and we're done."
-SIP_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:aws:autoscaling:groupName,Values=*sip-proxy*" | jq '.Reservations[].Instances[].PublicIpAddress')
 echo "***************************************************************"
 echo "***  Congratulations! Your service should now be running.   ***"
 echo "***  Your public SIP IP Address is $SIP_PUBLIC_IP           ***"
 echo "***************************************************************"
-

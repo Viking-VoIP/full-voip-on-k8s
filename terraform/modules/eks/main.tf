@@ -126,11 +126,19 @@ aws eks --region us-east-1 update-kubeconfig --name dev-cluster
 until [ -f "/root/.kube/config" ]; do sleep 1; done
 until [ "$(/root/kubectl --kubeconfig=/root/.kube/config get nodes | grep $(hostname) | wc -l)" == "1" ]; do sleep 1; done
 /root/kubectl --kubeconfig=/root/.kube/config label nodes $(hostname) application=b2bua
+# Install AWS EFS Utilities
+sudo yum install -y amazon-efs-utils
+# Mount EFS
+sudo mkdir /efs
+sudo mount -t efs ${aws_efs_file_system.efs.id}:/ /efs
+# Edit fstab so EFS automatically loads on reboot
+sudo echo ${aws_efs_file_system.efs.id}:/ /efs efs defaults,_netdev 0 0 >> /etc/fstab
 EOT
       associate_public_ip_address   = true
       additional_security_group_ids = [
         aws_security_group.sg_ssh_mgmt.id,
         aws_security_group.sg_sip_b2bua.id,
+        aws_security_group.efs_security_group.id,
         var.vpc_default_sg_id
       ]
       labels = {

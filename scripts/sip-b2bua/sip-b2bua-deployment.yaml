@@ -28,6 +28,8 @@ spec:
           volumeMounts:
           - name: fslogs
             mountPath: /fslogs
+          - name: efs
+            mountPath: /efs
           name: sip-b2bua
           securityContext:
             privileged: true
@@ -35,6 +37,10 @@ spec:
       - name: fslogs
         hostPath:
           path: /var/log/freeswitch
+          type: DirectoryOrCreate
+      - name: efs
+        hostPath:
+          path: /efs
           type: DirectoryOrCreate
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet

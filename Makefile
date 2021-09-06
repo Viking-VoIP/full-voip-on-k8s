@@ -74,6 +74,7 @@ destroy-main:
 		echo "Exiting." ; exit 1 ; \
 	fi \
 	fi
+	@kubectl delete -f scripts/config-server/config-server-deployment.yaml
 	@cd terraform/project/main && $(MAKE) destroy && echo "$(OK_COLOR)RESULT:$(NO_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Success" || echo "$(ERROR_COLOR)RESULT:$(ERROR_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Failed, exiting..."
 
 destroy-all: destroy-main destroy-backend
