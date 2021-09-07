@@ -129,8 +129,9 @@ until [ "$(/root/kubectl --kubeconfig=/root/.kube/config get nodes | grep $(host
 # Install AWS EFS Utilities
 sudo yum install -y amazon-efs-utils
 # Mount EFS
-sudo mkdir /efs
+sudo mkdir /efs/vm-recording
 sudo mount -t efs ${aws_efs_file_system.efs.id}:/ /efs
+sudo chmod og+rw /efs/vm-recording
 # Edit fstab so EFS automatically loads on reboot
 sudo echo ${aws_efs_file_system.efs.id}:/ /efs efs defaults,_netdev 0 0 >> /etc/fstab
 EOT

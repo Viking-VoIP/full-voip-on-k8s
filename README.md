@@ -66,3 +66,15 @@ This will launch the deployment process.
 If everything goes OK, you will get an output of your setup, you should save this somewhere safe.
 
 *NOTE*: You should at least change dev.vars.json for the db password.
+
+
+# Services out of the box
+
+- User-to-user calling:
+  When a registered user calls another local user, the call always goes to the B2BUA so that the RTP in anchored there. The call is then forwarded to the proxy, who then does the actual location lookup and forward to the B-user.
+- User-to-termination provider:
+  I'll provide a variable on dev.vars.json so that you can do outbound termination.
+- Voicemail:
+  When a local user is called and is not registered, the incoming calls goes to Voicemail. This was implemented accross all avaiable freeSWITCHes by creating an EFS and attaching it to all SIP-B2BUA, so the recordings are available to all.
+
+  

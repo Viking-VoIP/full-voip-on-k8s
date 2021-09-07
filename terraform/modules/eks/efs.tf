@@ -1,8 +1,3 @@
-resource "random_integer" "my_random_gen" {
-  min = 0
-  max = 2
- }
-
 resource "aws_security_group" "efs_security_group" {
     name        = "efs_security_group"
     description = "Allow NFS from SGs"
@@ -26,7 +21,7 @@ resource "aws_efs_file_system" "efs" {
     creation_token   = "EFS Shared Data"
     performance_mode = "generalPurpose"
     tags = {
-        Name = "EFS Shared Data"
+        Name = "EFS Vociemail Backend"
     }
 }
 
