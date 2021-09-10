@@ -53,7 +53,7 @@ The images pulled are:
 # Services out of the box
 
 - User-to-user calling:
-  When a registered user calls another local user, the call always goes to the B2BUA so that the RTP in anchored there. The call is then forwarded to the proxy, who then does the actual location lookup and forward to the B-user.
+  When a registered user calls another local user, the call always goes to the B2BUA so that the RTP is anchored there. The call is then forwarded to the proxy, who then does the actual location lookup and forward to the B-user.
 - User-to-termination provider:
   I'll provide a variable on dev.vars.json so that you can do outbound termination.
 - Voicemail:
@@ -96,6 +96,13 @@ cd into the project folder:
 Use your favorite edit to edit the variables file:
 
 `terraform/project/main/dev.vars.json`
+
+A few variables are special:
+- `local_subscribers_regexp: "^7[0-9]{8}"`: This is a regexp representing the numbers you'll be assigning to you subscribers, in this case 700000000-799999999. The SIP-PROXY will detect calls to these numbers and forward them to the B2BUA so the rtp is anchored there and you don't have any audio issues.
+- `region : us-east-1`: The AWS region in which to deploy the platform.
+
+*Please review the vars file to set the instance type you want* 
+
 
 To build the whole project simply execute:
 
