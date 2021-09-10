@@ -21,7 +21,7 @@ module "rds_mysql" {
     apply_immediately                   = false
     multi_az                            = false
     port                                = 3306
-    name                                = "example"
+    name                                = "viking"
     storage_type                        = "gp2"
     iops                                = 0
     auto_minor_version_upgrade          = false
