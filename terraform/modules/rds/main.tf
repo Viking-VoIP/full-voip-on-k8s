@@ -40,7 +40,7 @@ module "rds_mysql" {
     publicly_accessible                 = true
     license_model                       = "general-public-license"
     major_engine_version                = "5.7"
-    description                         = "This is example"
+    description                         = "This is the database backend for the VoIP platform"
 
     tags = {
         Environment = "dev"
