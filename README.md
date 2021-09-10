@@ -41,24 +41,7 @@ The clients will register (if configured) on the Proxy's public IP address. When
   - kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
   - AWS cli utility (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
-# Prepare your deployment
-##
 
-Clone the repo
-
-```git clone git@github.com:Viking-VoIP/full-voip-on-k8s.git viking-voip```
-
-cd into the project folder:
-
-```cd viking-voip```
-
-*IMPORTANT*: The variable file contains all the information needed to deploy the complete solution. There are parameters you will probably want to change.
-
-Use your favorite edit to edit the variables file:
-
-`terraform/project/main/dev.vars.json`
-
----
 # Docker Images
 
 When you create the platform, kubernetes will pull 3 images off of my dockerhub repo (https://hub.docker.com/orgs/vikingvoip/repositories)
@@ -95,6 +78,24 @@ To do:
 - ```make destroy-main```: Will delete all resources previously created by the main project. (it is possible the destroy doesn't work because sometimes a previsouly created ELB is not destroyed. If this happens, you will need to manually delete the ELB and execute the destroy agaon. We're investigating into that.)
 - ```make destroy-backend```: Will delete the backend resources created for state management.
 
+---
+
+# Prepare your deployment
+##
+
+Clone the repo
+
+```git clone git@github.com:Viking-VoIP/full-voip-on-k8s.git viking-voip```
+
+cd into the project folder:
+
+```cd viking-voip```
+
+*IMPORTANT*: The variable file contains all the information needed to deploy the complete solution. There are parameters you will probably want to change.
+
+Use your favorite edit to edit the variables file:
+
+`terraform/project/main/dev.vars.json`
 
 To build the whole project simply execute:
 
