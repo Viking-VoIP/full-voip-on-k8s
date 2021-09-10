@@ -15,6 +15,20 @@ The clients will register (if configured) on the Proxy's public IP address. When
 # Architecture:
 ![Deployment Architecture](voip-full-k8s-network-diagram.jpg)
 
+# Resources Created by the project
+
+- VPC (Including IGW, RouteTables, etc)
+- EKS cluster
+- RDS database
+- Support ASG (You can configure all node types in `terraform/project/main/dev.vars.json`:
+  - 3 support nodes for consul (required for state consensus, they can be small types)
+- SIP-PROXY ASG:
+  - 1 SIP-PROXY node (Kamailio)
+- Backend ASG:
+  - 1 config-server node
+- B2BUA ASG:
+  - 1 B2BUA node (freeSWITCH)
+
 ---
 # Requirements
 ## 
@@ -67,6 +81,13 @@ If everything goes OK, you will get an output of your setup, you should save thi
 
 *NOTE*: You should at least change dev.vars.json for the db password.
 
+# Docker Images
+
+When you create the platform, kubernetes will pull 3 images off of my dockerhub repo (https://hub.docker.com/orgs/vikingvoip/repositories)
+The images pulled are:
+- Kamailio Proxy Server version 5.3
+- freeSWITCH version 1.10
+- Config Server, this is an nginx server with some php scripts to server the dialplan to freeSWITCH as well as a script to parse and insert the CDRs into the database.
 
 # Services out of the box
 
@@ -77,4 +98,10 @@ If everything goes OK, you will get an output of your setup, you should save thi
 - Voicemail:
   When a local user is called and is not registered, the incoming calls goes to Voicemail. This was implemented accross all avaiable freeSWITCHes by creating an EFS and attaching it to all SIP-B2BUA, so the recordings are available to all.
 
-  
+To do:
+
+- Support for REFER/Transfer by remembering where a user's call sent and if we receive another call for that user, send it to the same B2BUA.
+- Some kind of UI to create new subscribers.
+- Some kind of UI to add new termination providers.
+- Some kind of UI to add new origination providers.
+- Some kind of UI to create a route table based on the number diales (LCR).
