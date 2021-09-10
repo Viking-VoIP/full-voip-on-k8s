@@ -99,7 +99,9 @@ Use your favorite edit to edit the variables file:
 
 A few variables are special:
 - `local_subscribers_regexp: "^7[0-9]{8}"`: This is a regexp representing the numbers you'll be assigning to you subscribers, in this case 700000000-799999999. The SIP-PROXY will detect calls to these numbers and forward them to the B2BUA so the rtp is anchored there and you don't have any audio issues.
-- `region : us-east-1`: The AWS region in which to deploy the platform.
+- `region: "us-east-1"`: The AWS region in which to deploy the platform.
+- `db_username: "admin"`: The database (RDS) username
+- `db_password: "AbC123fgh#"`: The databse (RDS) password
 
 *Please review the vars file to set the instance type you want* 
 
@@ -140,3 +142,5 @@ DOMAIN=(kubectl exec -t consul-consul-server-0 -- /bin/consul kv get voice/proxy
 ```
 kubectl exec -ti $POD -- kamctl add $USER@$DOMAIN $PASS
 ```
+
+Or you can add them straight on the database.
