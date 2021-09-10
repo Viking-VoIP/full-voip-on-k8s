@@ -20,8 +20,11 @@ help:
 	@echo "    - "make init-backend": Will initialize the backend (S3 bucket and DynamoDB Table for terraform state)."
 	@echo "    - "make apply-backend": Will initialize + build the backend (S3 bucket and DynamoDB Table for terraform state)."
 	@echo "    - "make init-main": Will initialize the main project (This will prepare the project to build)."
-	@echo "    - "make apply-main": Will initialize + build the backend (Will create all required resource on AWS)."
-	@echo "    - "make destroy": Will destroy all resources."
+	@echo "    - "make apply-main": Will initialize + build the whole voip platform (Will create all required resource on AWS)."
+	@echo "    - "make destroy-backend": Will destroy all backend resources."
+	@echo "    - "make destroy-main": Will destroy the whole voip platform resources."
+	@echo "    - "make destroy-all": Will destroy all resources."
+	@echo "    - "make clean": Will remove all terraform files (.terraform, etc)."
 	@echo ""
 
 all: apply-main
