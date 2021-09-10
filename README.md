@@ -59,28 +59,6 @@ Use your favorite edit to edit the variables file:
 `terraform/project/main/dev.vars.json`
 
 ---
-# Deploy
-## Makefile
-
-- ```make help```: Will give you all possible directives, i.e.:
-- ```make init-backend```: Will initialize the s3_backend, meaning preparing all plugins needed by terraform.
-- ```make apply-backend```: Will apply the s3_backend terraform. This will create an S3 bucket and a DynamoDB table which are used to keep track of the state of terraform deployments in relation to resrouces in AWS. (Includes all previous directives)
-- ```make init-main```: Will initialize the main projecyt, meaning preparing all plugins needed by that terraform project.
-- ```make apply-backend```: Will apply the main terraform project. This will create all needed resources to deploy the whole eks platform.
-- ```make destroy-main```: Will delete all resources previously created by the main project. (it is possible the destroy doesn't work because sometimes a previsouly created ELB is not destroyed. If this happens, you will need to manually delete the ELB and execute the destroy agaon. We're investigating into that.)
-- ```make destroy-backend```: Will delete the backend resources created for state management.
-
-
-To build the whole project simply execute:
-
-```make apply-main``` 
-
-This will launch the deployment process.
-
-If everything goes OK, you will get an output of your setup, you should save this somewhere safe.
-
-*NOTE*: You should at least change dev.vars.json for the db password.
-
 # Docker Images
 
 When you create the platform, kubernetes will pull 3 images off of my dockerhub repo (https://hub.docker.com/orgs/vikingvoip/repositories)
@@ -105,3 +83,52 @@ To do:
 - Some kind of UI to add new termination providers.
 - Some kind of UI to add new origination providers.
 - Some kind of UI to create a route table based on the number diales (LCR).
+
+# Deploy
+## Makefile
+
+- ```make help```: Will give you all possible directives, i.e.:
+- ```make init-backend```: Will initialize the s3_backend, meaning preparing all plugins needed by terraform.
+- ```make apply-backend```: Will apply the s3_backend terraform. This will create an S3 bucket and a DynamoDB table which are used to keep track of the state of terraform deployments in relation to resrouces in AWS. (Includes all previous directives)
+- ```make init-main```: Will initialize the main projecyt, meaning preparing all plugins needed by that terraform project.
+- ```make apply-backend```: Will apply the main terraform project. This will create all needed resources to deploy the whole eks platform.
+- ```make destroy-main```: Will delete all resources previously created by the main project. (it is possible the destroy doesn't work because sometimes a previsouly created ELB is not destroyed. If this happens, you will need to manually delete the ELB and execute the destroy agaon. We're investigating into that.)
+- ```make destroy-backend```: Will delete the backend resources created for state management.
+
+
+To build the whole project simply execute:
+
+```make apply-main``` 
+
+This will launch the deployment process.
+
+If everything goes OK, you will get an output of your setup, you should save this somewhere safe.
+
+*NOTE*: You should at least change dev.vars.json for the db password.
+
+---
+## What next?
+
+Subscribers are not created by default, you will need to add them manually. To do this you can execute something like:
+
+
+*Get the proxy's pod*
+```
+POD=$(k get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | sed "s/\"//g"))
+```
+
+*Set a couple var*
+```
+USER=721110000
+PASS=whatever
+```
+
+*Get the domain from dev.vars.json*
+```
+DOMAIN=(kubectl exec -t consul-consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
+```
+
+*Create the user via sip-proxy*
+```
+kubectl exec -ti $POD -- kamctl add $USER@$DOMAIN $PASS
+```
