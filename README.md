@@ -105,6 +105,7 @@ A few variables are special:
 - `region: "us-east-1"`: The AWS region in which to deploy the platform.
 - `db_username: "admin"`: The database (RDS) username
 - `db_password: "AbC123fgh#"`: The databse (RDS) password
+- `ssh_key_name: some-key-name`: The ssh key pair you created for this.
 
 *Please review the vars file to set the instance type you want* 
 
