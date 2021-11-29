@@ -34,9 +34,14 @@ The clients will register (if configured) on the Proxy's public IP address. When
 ## 
 
 - You need to have an AWS account properly configured in your CLI.
-- The AWS account secret_access_key and accrss_key_id should already be properly configured in your ~/.aws/credential file. 
-  - Make sure you export the Environment Variables like so:
-    - `export AWS_PROFILE=[your-aws-profile-as-named-in-the-credentials-file]`
+- The AWS account secret_access_key and access_key_id should already be properly configured in your ~/.aws/credential file, i.e.:
+```
+[myawsaccount]
+aws_access_key_id = [YOUR-ACCESS-KEY-ID]
+aws_secret_access_key = [YOUR-SECRET-ACCESS-KEY]
+```
+  - And make sure you export the Environment Variables, before calling the _make file_, i.e.:
+    - `export AWS_PROFILE=myawsaccount`
 - You <b>MUST</b> create an ssh keypair EC2->Key Pairs, name it something and set it on the variables file (see "Prepare your deployment")
 - Said account must have all permissions to create a VPC, routing tables, EKS cluster, ASGs, etc.
 - You must have installed and properly configured the following:
