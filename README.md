@@ -37,6 +37,7 @@ The clients will register (if configured) on the Proxy's public IP address. When
 - The AWS account secret_access_key and accrss_key_id should already be properly configured in your ~/.aws/credential file. 
   - Make sure you export the Environment Variables like so:
     - `export AWS_PROFILE=[your-aws-profile-as-named-in-the-credentials-file]`
+- You MUST create an ssh keypair EC2->Key Pairs, name it something and set it on the variables file (see "Prepare your deployment")
 - Said account must have all permissions to create a VPC, routing tables, EKS cluster, ASGs, etc.
 - You must have installed and properly configured the following:
   - helm (https://helm.sh/docs/intro/install/)
