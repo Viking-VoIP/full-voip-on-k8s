@@ -125,6 +125,23 @@ If everything goes OK, you will get an output of your setup, you should save thi
 
 Subscribers are not created by default, you will need to add them manually. To do this you can execute something like:
 
+### Log on to kubernetes dashboard:
+
+* Get a token:
+```
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
+```
+
+* Start a kkubectl proxy
+```
+kubectl proxy
+```
+
+Copy the token in the output and paste it below:
+
+* Open
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
+
 
 *Get the proxy's pod*
 ```
