@@ -34,7 +34,15 @@ The clients will register (if configured) on the Proxy's public IP address. When
 ## 
 
 - You need to have an AWS account properly configured in your CLI.
-- The AWS account secret_access_key and accrss_key_id should already be properly configured in your ~/.aws/credential file.
+- The AWS account secret_access_key and access_key_id should already be properly configured in your ~/.aws/credential file, i.e.:
+```
+[myawsaccount]
+aws_access_key_id = [YOUR-ACCESS-KEY-ID]
+aws_secret_access_key = [YOUR-SECRET-ACCESS-KEY]
+```
+  - And make sure you export the Environment Variables, before calling the _make file_, i.e.:
+    - `export AWS_PROFILE=myawsaccount`
+- You <b>MUST</b> create an ssh keypair EC2->Key Pairs, name it something and set it on the variables file (see "Prepare your deployment")
 - Said account must have all permissions to create a VPC, routing tables, EKS cluster, ASGs, etc.
 - You must have installed and properly configured the following:
   - helm (https://helm.sh/docs/intro/install/)
@@ -102,6 +110,7 @@ A few variables are special:
 - `region: "us-east-1"`: The AWS region in which to deploy the platform.
 - `db_username: "admin"`: The database (RDS) username
 - `db_password: "AbC123fgh#"`: The databse (RDS) password
+- `ssh_key_name: some-key-name`: The ssh key pair you created for this.
 
 *Please review the vars file to set the instance type you want* 
 
@@ -120,6 +129,23 @@ If everything goes OK, you will get an output of your setup, you should save thi
 ## What next?
 
 Subscribers are not created by default, you will need to add them manually. To do this you can execute something like:
+
+### Log on to kubernetes dashboard:
+
+* Get a token:
+```
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
+```
+
+* Start a kkubectl proxy
+```
+kubectl proxy
+```
+
+Copy the token in the output and paste it below:
+
+* Open
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 
 
 *Get the proxy's pod*
