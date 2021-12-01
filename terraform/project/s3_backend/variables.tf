@@ -8,3 +8,7 @@ variable "aws_dynamodb_table" {
 variable "s3_bucket_name" {
   default = "terraform-bucket-lock"
 }
+
+variable "key_name" {
+  default = "ssh_keypair_name"
+}

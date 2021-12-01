@@ -22,7 +22,7 @@
             "min_capacity": "3",
             "max_capacity": "3",
             "disk_size": "20",
-            "ssh_key_name": "development-ssh-key-macmini"
+            "ssh_key_name": "ssh_keypair_name"
         },
         "backend": {
             "instance_type": "t2.small",
@@ -30,7 +30,7 @@
             "min_capacity": "1",
             "max_capacity": "1",
             "disk_size": "40",
-            "ssh_key_name": "development-ssh-key-macmini"
+            "ssh_key_name": "ssh_keypair_name"
         },
         "sip-proxy": {
             "instance_type": "t2.small",
@@ -38,7 +38,7 @@
             "min_capacity": "1",
             "max_capacity": "1",
             "disk_size": "40",
-            "ssh_key_name": "development-ssh-key-macmini"
+            "ssh_key_name": "ssh_keypair_name"
         },
         "sip-b2bua": {
             "instance_type": "t2.small",
@@ -46,7 +46,7 @@
             "min_capacity": "1",
             "max_capacity": "1",
            "disk_size": "40",
-           "ssh_key_name": "development-ssh-key-macmini"
+           "ssh_key_name": "ssh_keypair_name"
         }
     }
 }
