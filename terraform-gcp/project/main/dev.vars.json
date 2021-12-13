@@ -1,0 +1,36 @@
+{
+    "gcp_cluster_name": "my-test-cluster",
+    "gcp_network_name": "mynetwork",
+    "gcp_project_id": "viking-voip",
+    "gcp_region": "us-east1",
+    "gcp_zone": "us-east1-b",
+    "gcp_subnetwork_name": "default",
+    "gcp_service_account": "deployer-david@viking-voip.iam.gserviceaccount.com",
+    "gcp_database_version": "MYSQL_5_7",
+    "gks_workers": {
+        "support": {
+            "machine_type": "e2-micro",
+            "min_capacity": "1",
+            "max_capacity": "1",
+            "disk_size": "20"
+        },
+        "backend": {
+            "machine_type": "e2-micro",
+            "min_capacity": "1",
+            "max_capacity": "1",
+            "disk_size": "20"
+        },
+        "sip-b2bua": {
+            "machine_type": "e2-micro",
+            "min_capacity": "1",
+            "max_capacity": "1",
+            "disk_size": "20"
+        },
+        "sip-proxy": {
+            "machine_type": "e2-micro",
+            "min_capacity": "1",
+            "max_capacity": "1",
+            "disk_size": "20"
+        }
+    }
+}
