@@ -148,6 +148,10 @@ variable "backup_configuration" {
   }
 }
 
+variable "private_network" {
+  type = string
+}
+
 variable "ip_configuration" {
   description = "The ip_configuration settings subblock"
   type = object({

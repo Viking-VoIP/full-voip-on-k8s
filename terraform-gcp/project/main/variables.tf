@@ -1,6 +1,6 @@
 variable "gcp_credentials" {
     type = string
-    default = "/Users/david/Documents/Personal/viking/gcp-david-work-viking-voip-28bd56b8af76.json"
+    default = "/Users/david.villasmil/deployer-laptop-tn-gcp-creds-viking-voip.json"
 }
 
 variable "gcp_project_id" {

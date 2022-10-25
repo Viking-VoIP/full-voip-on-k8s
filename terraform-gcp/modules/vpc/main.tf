@@ -15,8 +15,7 @@ resource "google_compute_global_address" "private_ip_block" {
   purpose      = "VPC_PEERING"
   address_type = "INTERNAL"
   ip_version   = "IPV4"
-  # We don't specify a address range because Google will automatically assign one for us.
-  prefix_length = 20 # ~4k IPs
+  prefix_length = 20
   network       = google_compute_network.vpc.self_link
   project       = var.gcp_project_id
 }
