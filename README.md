@@ -161,7 +161,7 @@ PASS=whatever
 
 *Get the domain from dev.vars.json*
 ```
-DOMAIN=(kubectl exec -t consul-consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
+DOMAIN=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
 ```
 
 *Create the user via sip-proxy*
