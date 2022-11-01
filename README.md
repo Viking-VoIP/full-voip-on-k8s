@@ -150,7 +150,7 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 
 *Get the proxy's pod*
 ```
-POD=$(k get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | sed "s/\"//g"))
+POD=$(kubectl get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | sed "s/\"//g")
 ```
 
 *Set a couple var*
@@ -161,7 +161,7 @@ PASS=whatever
 
 *Get the domain from dev.vars.json*
 ```
-DOMAIN=(kubectl exec -t consul-consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
+DOMAIN=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
 ```
 
 *Create the user via sip-proxy*
