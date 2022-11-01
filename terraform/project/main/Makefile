@@ -7,7 +7,7 @@ SHELL := /usr/bin/env bash
 all: init validate apply
 
 init: 
-	@terraform show 2> /dev/null || terraform init
+	@terraform show 2> /dev/null || terraform init -reconfigure 
 
 validate: 
 	@terraform validate

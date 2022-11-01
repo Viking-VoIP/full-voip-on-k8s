@@ -5,7 +5,7 @@ provider "aws" {
 module "rds_mysql" {
     source            = "git::https://github.com/tmknom/terraform-aws-rds-mysql.git?ref=tags/2.0.0"
     identifier        = var.db_instance_name
-    engine_version    = "5.7.28"
+    engine_version    = var.db_version
     instance_class    = var.db_instance_type
     allocated_storage = var.db_disk_size
     username          = var.db_username

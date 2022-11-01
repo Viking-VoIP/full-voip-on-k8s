@@ -33,18 +33,18 @@ init-backend:
 	@echo "$(WARN_COLOR)WARNING:$(NO_COLOR) Initializing terraform backend"
 	@cd terraform/project/s3_backend && $(MAKE) init && echo $(call report_success,"Backend","Initialize") || (echo $(call report_failure,"Backend","Initialize") && exit -1)
 
-apply-backend: init-backend
+apply-backend: #init-backend
 	@echo "$(WARN_COLOR)WARNING:$(NO_COLOR) Applying Backend will create the S3 bucket and DynamoDB Table."
 	@cd terraform/project/s3_backend && $(MAKE) apply && echo $(call report_success,"Backend","Apply") || (echo $(call report_failure,"Backend","Apply") && exit -1)
 
-init-main: apply-backend
+init-main: #apply-backend
 	@echo "$(WARN_COLOR)WARNING:$(NO_COLOR) Initializing $(OK_COLOR)Main$(NO_COLOR) project."
 	@cd terraform/project/main && $(MAKE) init && echo $(call report_success,"Main","Initialize") || (echo $(call report_failure,"Main","Initialize") && exit -1)
 
-apply-main: init-main
+apply-main: #init-main
 	@echo "$(WARN_COLOR)WARNING:$(NO_COLOR) Applying $(OK_COLOR)main$(NO_COLOR) project -- Tnis will create all required resources on AWS."
 	@cd terraform/project/main && $(MAKE) apply && echo $(call report_success,"Main","Apply") || (echo $(call report_failure,"Main","Apply") && exit -1)
-	cd scripts; bash ./init.sh && echo $(call report_success,"Scripts","Execute") || (echo $(call report_failure,"Scripts","Execute") && exit -1)
+	#cd scripts; bash ./init.sh && echo $(call report_success,"Scripts","Execute") || (echo $(call report_failure,"Scripts","Execute") && exit -1)
 
 init-script:
 	cd scripts; bash ./init.sh && echo $(call report_success,"Scripts","Execute") || (echo $(call report_failure,"Scripts","Execute") && exit -1)
@@ -77,7 +77,7 @@ destroy-main:
 		echo "Exiting." ; exit 1 ; \
 	fi \
 	fi
-	@kubectl delete -f scripts/config-server/config-server-deployment.yaml
+	#@kubectl delete -f scripts/config-server/config-server-deployment.yaml
 	@cd terraform/project/main && $(MAKE) destroy && echo "$(OK_COLOR)RESULT:$(NO_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Success" || echo "$(ERROR_COLOR)RESULT:$(ERROR_COLOR) $(HIGHLIGHT_COLOR)Main$(NO_COLOR) Destroy Failed, exiting..."
 
 destroy-all: destroy-main destroy-backend

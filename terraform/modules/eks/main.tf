@@ -10,7 +10,7 @@ resource "random_integer" "priority" {
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster_name
-  cluster_version = "1.19"
+  cluster_version = var.kubernetes_version
   subnets         = var.private_subnets_ids
 
   tags = {

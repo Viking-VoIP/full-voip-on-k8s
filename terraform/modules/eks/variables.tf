@@ -2,6 +2,10 @@ variable "cluster_name" {
     description = "Cluster Name"
 }
 
+variable "kubernetes_version" {
+    description = "Kubernetes veersion as per AWS specs"
+}
+
 variable "region" {
   description = "AWS Deployment region.."
 }

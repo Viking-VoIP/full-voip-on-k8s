@@ -7,7 +7,7 @@ NDEF = $(if $(value $(1)),,$(error $(1) not set))
 all: init validate apply
 
 init: 
-	terraform init
+	terraform init -reconfigure 
 
 validate: 
 	@terraform validate

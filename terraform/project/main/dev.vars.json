@@ -2,10 +2,11 @@
     "local_subscribers_regexp": "^7[0-9]{8}",
 
     "db_instance_name": "backend-db",
-    "db_instance_type": "db.t2.micro",
+    "db_instance_type": "db.t3.micro",
     "db_disk_size": "40",
     "db_username": "admin",
     "db_password": "AbC123fgh#",
+    "db_version": "5.7.39",
 
     "region" : "us-east-1",
     "vpc_cidr" : "10.0.0.0/16",
@@ -15,38 +16,39 @@
     "private_subnets_cidr" : ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"],
 
     "eks_cluster_name": "dev-cluster",
+    "eks_kubernetes_version": "1.20",
     "eks_workers": {
         "support": {
-            "instance_type": "t2.micro",
+            "instance_type": "t3.small",
             "desired_capacity": "3",
             "min_capacity": "3",
             "max_capacity": "3",
-            "disk_size": "20",
-            "ssh_key_name": "ssh_keypair_name"
+            "disk_size": "60",
+            "ssh_key_name": "davidcsi-hotmail-ssh"
         },
         "backend": {
-            "instance_type": "t2.small",
+            "instance_type": "t3.small",
             "desired_capacity": "1",
             "min_capacity": "1",
             "max_capacity": "1",
             "disk_size": "40",
-            "ssh_key_name": "ssh_keypair_name"
+            "ssh_key_name": "davidcsi-hotmail-ssh"
         },
         "sip-proxy": {
-            "instance_type": "t2.small",
+            "instance_type": "t3.small",
             "desired_capacity": "1",
             "min_capacity": "1",
             "max_capacity": "1",
             "disk_size": "40",
-            "ssh_key_name": "ssh_keypair_name"
+            "ssh_key_name": "davidcsi-hotmail-ssh"
         },
         "sip-b2bua": {
-            "instance_type": "t2.small",
+            "instance_type": "t3.small",
             "desired_capacity": "1",
             "min_capacity": "1",
             "max_capacity": "1",
            "disk_size": "40",
-           "ssh_key_name": "ssh_keypair_name"
+           "ssh_key_name": "davidcsi-hotmail-ssh"
         }
     }
 }

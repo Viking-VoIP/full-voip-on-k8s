@@ -2,6 +2,10 @@ variable "db_instance_type" {
     type = string
 }
 
+variable "db_version" {
+    type = string
+}
+
 variable "db_disk_size" {
     type = string
 }

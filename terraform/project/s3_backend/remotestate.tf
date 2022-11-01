@@ -7,7 +7,7 @@ resource "random_id" "tc-rmstate" {
 }
 
 resource "aws_s3_bucket" "tfrmstate" {
-  bucket        = "${var.s3_bucket_name}-${random_id.tc-rmstate.dec}"
+  bucket        = "${var.s3_bucket_name}-${random_id.tc-rmstate.dec}-${random_id.tc-rmstate.dec}"
   acl           = "private"
   force_destroy = true
 
