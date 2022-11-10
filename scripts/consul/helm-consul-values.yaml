@@ -2,26 +2,20 @@
 global:
   datacenter: voip-full
   name: consul
-  #imageK8S: "hashicorp/consul-k8s:0.46.0"
 
 ui:
-  storageClassName: gp2
   replicas: 1
   service:
     enabled: true
     type: 'LoadBalancer'
-#    Deprecated
-#    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
-#    New
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
-  nodeSelector: 
-    application: "support"
+#  nodeSelector: 
+#    application: "support"
 
 server:
-  storageClassName: gp2
   replicas: 3
-  nodeSelector: |
-    application: "support"
+#  nodeSelector: |
+#    application: "support"
 
 client:
   enabled: false

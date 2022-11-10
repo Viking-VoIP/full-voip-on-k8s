@@ -150,6 +150,24 @@ EOT
   ]
 }
 
+resource "aws_eks_addon" "ebs" {
+  cluster_name      = var.cluster_name
+  addon_name        = "aws-ebs-csi-driver"
+  addon_version     = "v1.11.4-eksbuild.1"
+}
+
+resource "kubernetes_annotations" "default-storageclass" {
+  api_version = "storage.k8s.io/v1"
+  kind        = "StorageClass"
+  force       = "true"
+
+  metadata {
+    name = "gp2"
+  }
+  annotations = {
+    "storageclass.kubernetes.io/is-default-class" = "false"
+  }
+}
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }

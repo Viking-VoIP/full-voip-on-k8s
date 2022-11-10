@@ -10,7 +10,9 @@ checkutil () {
 # echo "--> Starting intialization script..."
 export AWS_REGION=$(jq '.region' ../terraform/project/main/dev.vars.json | sed 's/"//g')
 export CLUSTER_NAME=$(cat ../terraform/project/main/dev.vars.json | jq '.eks_cluster_name' | sed 's/"//g')
-export DB_ID=$(cat ../terraform/project/main/dev.vars.json | jq '.db_instance_name' | sed 's/"//g')
+cd ../terraform/project/main
+export DB_ID=$(terraform state pull | jq '.outputs.db_instance_data.value.db_instance_data.db_instance_id' | sed 's/"//g')
+cd -
 export DB_USER=$(cat ../terraform/project/main/dev.vars.json | jq '.db_username' | sed 's/"//g')
 export DB_PASSWD=$(cat ../terraform/project/main/dev.vars.json | jq '.db_password' | sed 's/"//g')
 export LOCAL_SUBSCRIBERS_REGEXP=$(cat ../terraform/project/main/dev.vars.json | jq '.local_subscribers_regexp' | sed 's/"//g')
