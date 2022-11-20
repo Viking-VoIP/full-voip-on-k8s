@@ -8,6 +8,7 @@ resource "random_integer" "priority" {
 }
 
 module "eks" {
+  version         = "17.24.0"
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster_name
   cluster_version = var.kubernetes_version
@@ -154,6 +155,8 @@ resource "aws_eks_addon" "ebs" {
   cluster_name      = var.cluster_name
   addon_name        = "aws-ebs-csi-driver"
   addon_version     = "v1.11.4-eksbuild.1"
+
+  #depends_on = eks
 }
 
 resource "kubernetes_annotations" "default-storageclass" {
@@ -168,6 +171,7 @@ resource "kubernetes_annotations" "default-storageclass" {
     "storageclass.kubernetes.io/is-default-class" = "false"
   }
 }
+
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }

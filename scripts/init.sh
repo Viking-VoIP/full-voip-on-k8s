@@ -10,9 +10,7 @@ checkutil () {
 # echo "--> Starting intialization script..."
 export AWS_REGION=$(jq '.region' ../terraform/project/main/dev.vars.json | sed 's/"//g')
 export CLUSTER_NAME=$(cat ../terraform/project/main/dev.vars.json | jq '.eks_cluster_name' | sed 's/"//g')
-cd ../terraform/project/main
-export DB_ID=$(terraform state pull | jq '.outputs.db_instance_data.value.db_instance_data.db_instance_id' | sed 's/"//g')
-cd -
+cd ../terraform/project/main && export DB_ID=$(terraform state pull | jq '.outputs.db_instance_data.value.db_instance_data.db_instance_id' | sed 's/"//g') && cd -
 export DB_USER=$(cat ../terraform/project/main/dev.vars.json | jq '.db_username' | sed 's/"//g')
 export DB_PASSWD=$(cat ../terraform/project/main/dev.vars.json | jq '.db_password' | sed 's/"//g')
 export LOCAL_SUBSCRIBERS_REGEXP=$(cat ../terraform/project/main/dev.vars.json | jq '.local_subscribers_regexp' | sed 's/"//g')
@@ -38,6 +36,22 @@ echo "--> Install consul..."
 if [ "$(helm list --all-namespaces | grep 'consul' | wc -l)" -eq "1" ]; then
     echo "Consul chart already installed, skipping."
 else
+
+    # Verify OIDC exists
+    oidc_id=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+    if [ "1" -eq "$(aws iam list-open-id-connect-providers | grep $oidc_id | wc -l)" ]; then 
+        echo "ODIC driver already present..."
+    else
+        eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve
+    fi
+
+    # let's add the right permissions to the nodes so they can mount volumes dynamically
+    aws iam attach-role-policy \
+        --role-name $(aws iam list-roles | jq '.Roles[] | select( .RoleName | test("dev-cluster.*")) | select( .AssumeRolePolicyDocument | .Statement[] | .Principal | .Service | test("ec2.amazonaws.com")?) | .RoleName' | sed 's/"//g') \
+        --policy-arn $(aws iam list-policies | jq '.Policies[] | select(.PolicyName | test("AmazonEC2FullAccess")) | .Arn' | sed 's/\"//g')
+
+    kubectl apply -f consul/storage-class.yaml
+
     helm repo add hashicorp https://helm.releases.hashicorp.com
     #helm install -f consul/helm-consul-values.yaml hashicorp hashicorp/consul
     helm install --values consul/helm-consul-values.yaml consul hashicorp/consul --set global.name=consul --create-namespace --namespace consul    
@@ -71,7 +85,6 @@ else
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml
     kubectl apply -f dashboard/dashboard-admin.yaml
 fi
-
 sleep 5 # sleep 5 # read -p "Press enter to continue"
 
 # Just in case the svc is not yet deployed...
@@ -85,7 +98,9 @@ sleep 5 # sleep 5 # read -p "Press enter to continue"
 
 # Wait for consul-server is running
 echo "--> Wait for consul-server to be running..."
-until [ "1" -eq "$(kubectl get pod -n consul consul-server-0 | grep Running | wc -l)" ]; do echo "Waiting for consul server to be running..." && sleep 30; done
+until [ "1" -eq "$(kubectl get pod -n consul consul-server-0 | grep Running | wc -l) | grep -v 'no cluster leader'" ]; do echo "Waiting for consul server to be running..." && sleep 30; done
+
+#if [ "$(echo $data | grep "cluste" | wc -l)" -gt 0 ]; then echo "yes"; fi
 
 sleep 5 # sleep 5 # read -p "Press enter to continue"
 

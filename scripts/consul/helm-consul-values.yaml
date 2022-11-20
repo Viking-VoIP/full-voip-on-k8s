@@ -13,9 +13,19 @@ ui:
 #    application: "support"
 
 server:
+  enabled: "-"
+  image: null
   replicas: 3
-#  nodeSelector: |
-#    application: "support"
+  bootstrapExpect: 3 # Should <= replicas count
+
+  # storage and storageClass are the settings for configuring stateful
+  # storage for the server pods. storage should be set to the disk size of
+  # the attached volume. storageClass is the class of storage which defaults
+  # to null (the Kube cluster will pick the default).
+#  storage: 10Gi
+  storageClass: null
+  nodeSelector: |
+    application: "support"
 
 client:
   enabled: false

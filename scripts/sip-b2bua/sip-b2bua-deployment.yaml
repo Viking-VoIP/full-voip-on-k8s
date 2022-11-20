@@ -8,7 +8,7 @@ metadata:
   namespace: default
 spec:
   minReadySeconds: 10
-  #replicas: 1
+  replicas: 1
   selector:
     matchLabels:
       app: sip-b2bua

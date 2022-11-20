@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gp2-0
+  labels:
+    type: local
+spec:
+  storageClassName: gp2
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  claimRef:
+    namespace: consul
+    name: data-consul-consul-server-0
+#  hostPath:
+#    path: "/consul/data"
+#---
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: gp2-1
+#  labels:
+#    type: local
+#spec:
+#  storageClassName: gp2
+#  capacity:
+#    storage: 10Gi
+#  accessModes:
+#    - ReadWriteOnce
+#  persistentVolumeReclaimPolicy: Recycle
+#  claimRef:
+#    namespace: consul
+#    name: data-consul-consul-server-1
+#  hostPath:
+#    path: "/consul"
+#---
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: gp2-2
+#  labels:
+#    type: local
+#spec:
+#  storageClassName: gp2
+#  capacity:
+#    storage: 10Gi
+#  accessModes:
+#    - ReadWriteOnce
+#  persistentVolumeReclaimPolicy: Recycle
+#  claimRef:
+#    namespace: consul
+#    name: data-consul-consul-server-2
+#  hostPath:
+#    path: "/consul"
+#

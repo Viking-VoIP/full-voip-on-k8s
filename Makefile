@@ -25,6 +25,7 @@ help:
 	@echo "    - "make destroy-main": Will destroy the whole voip platform resources."
 	@echo "    - "make destroy-all": Will destroy all resources."
 	@echo "    - "make clean": Will remove all terraform files (.terraform, etc)."
+	@echo "    - "make init-script": deploy all images and services"
 	@echo ""
 
 all: apply-main
