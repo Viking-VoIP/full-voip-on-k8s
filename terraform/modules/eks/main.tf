@@ -99,6 +99,7 @@ until [ "$(/root/kubectl --kubeconfig=/root/.kube/config get nodes | grep $(host
 /root/kubectl --kubeconfig=/root/.kube/config label nodes $(hostname) application=proxy
 EOT
       associate_public_ip_address   = true
+      public_ip                     = true
       additional_security_group_ids = [
         aws_security_group.sg_ssh_mgmt.id,
         aws_security_group.sg_sip_proxy.id,
@@ -138,6 +139,7 @@ sudo chown freeswitch:freeswitch /efs
 sudo echo ${aws_efs_file_system.efs.id}:/ /efs efs defaults,_netdev 0 0 >> /etc/fstab
 EOT
       associate_public_ip_address   = true
+      public_ip                     = true
       additional_security_group_ids = [
         aws_security_group.sg_ssh_mgmt.id,
         aws_security_group.sg_sip_b2bua.id,
@@ -168,7 +170,7 @@ resource "kubernetes_annotations" "default-storageclass" {
     name = "gp2"
   }
   annotations = {
-    "storageclass.kubernetes.io/is-default-class" = "false"
+    "storageclass.kubernetes.io/is-default-class" = "true"
   }
 }
 

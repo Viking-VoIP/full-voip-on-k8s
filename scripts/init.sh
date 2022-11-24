@@ -98,7 +98,7 @@ sleep 5 # sleep 5 # read -p "Press enter to continue"
 
 # Wait for consul-server is running
 echo "--> Wait for consul-server to be running..."
-until [ "1" -eq "$(kubectl get pod -n consul consul-server-0 | grep Running | wc -l) | grep -v 'no cluster leader'" ]; do echo "Waiting for consul server to be running..." && sleep 30; done
+until [ "1" -eq "$(kubectl get pod -n consul consul-server-0 | grep Running  | grep -v 'no cluster leader' | wc -l)" ]; do echo "Waiting for consul server to be running..." && sleep 30; done
 
 #if [ "$(echo $data | grep "cluste" | wc -l)" -gt 0 ]; then echo "yes"; fi
 
@@ -141,6 +141,15 @@ DB_ADDRESS=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get bac
 DB_USER=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get backend/db_user)
 DB_PASSWD=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get backend/db_pass)
 # Create CDR table in viking's database via sip-proxy (which has a mysql client)
+
+until [ "1" -eq "$(kubectl get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | wc -l)" ]; do 
+    echo "Waiting for sip-proxy running..." && sleep 30
+done
+
+echo "Waiting for 3 minutes for the dust to settle..."
+sleep 180
+
+# inject database
 kubectl exec -t -n default $(kubectl get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | sed "s/\"//g") -- /bin/bash -c "/usr/bin/mysql -h $DB_ADDRESS -u $DB_USER -p$DB_PASSWD viking < /etc/kamailio/viking_schema.sql"
 
 # Lets create a couple subscriber (72110000)
