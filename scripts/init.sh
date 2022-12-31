@@ -50,7 +50,7 @@ else
         --role-name $(aws iam list-roles | jq '.Roles[] | select( .RoleName | test("dev-cluster.*")) | select( .AssumeRolePolicyDocument | .Statement[] | .Principal | .Service | test("ec2.amazonaws.com")?) | .RoleName' | sed 's/"//g') \
         --policy-arn $(aws iam list-policies | jq '.Policies[] | select(.PolicyName | test("AmazonEC2FullAccess")) | .Arn' | sed 's/\"//g')
 
-    kubectl apply -f consul/storage-class.yaml
+    #kubectl apply -f consul/storage-class.yaml
 
     helm repo add hashicorp https://helm.releases.hashicorp.com
     #helm install -f consul/helm-consul-values.yaml hashicorp hashicorp/consul
@@ -96,19 +96,28 @@ done
 
 sleep 5 # sleep 5 # read -p "Press enter to continue"
 
+RUNNING_CONSUL=$(kubectl get pod -n consul | grep "Running" | grep "server" | grep -v leader | head -n 1 | awk '{print$1}')
+echo "RUNNING_CONSUL=<$RUNNING_CONSUL>"
 # Wait for consul-server is running
 echo "--> Wait for consul-server to be running..."
-until [ "1" -eq "$(kubectl get pod -n consul consul-server-0 | grep Running  | grep -v 'no cluster leader' | wc -l)" ]; do echo "Waiting for consul server to be running..." && sleep 30; done
+until [ "2" -eq "$(kubectl get pod -n consul $RUNNING_CONSUL | wc -l)" ]; do echo "Waiting for consul server to be running..., output: " && kubectl get pod -n consul $RUNNING_CONSUL | wc -l && sleep 30; done
 
 #if [ "$(echo $data | grep "cluste" | wc -l)" -gt 0 ]; then echo "yes"; fi
 
 sleep 5 # sleep 5 # read -p "Press enter to continue"
 
 ### Set all variables on consul
-kubectl exec -t -n consul consul-server-0 -- /bin/consul kv put backend/db_address $DB_ADDRESS
-kubectl exec -t -n consul consul-server-0 -- /bin/consul kv put backend/db_user $DB_USER
-kubectl exec -t -n consul consul-server-0 -- /bin/consul kv put backend/db_pass $DB_PASSWD
-kubectl exec -t -n consul consul-server-0 -- /bin/consul kv put voice/local_subscribers_regexp $LOCAL_SUBSCRIBERS_REGEXP
+echo "--> Writing backend/db_address $DB_ADDRESS to $RUNNING_CONSUL ..."
+while [ "$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv put backend/db_address $DB_ADDRESS | grep 'Success' | wc -l)" -ne "1" ]; do echo "Failed writing! Will retry..."; sleep 30; done
+
+echo "--> Writing backend/db_user $DB_USER to $RUNNING_CONSUL ..."
+while [ "$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv put backend/db_user $DB_USER | grep 'Success' | wc -l)" -ne "1" ]; do echo "Failed writing! Will retry..."; sleep 30; done
+
+echo "--> Writing backend/db_pass $DB_PASSWD to $RUNNING_CONSUL ..."
+while [ "$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv put backend/db_pass $DB_PASSWD | grep 'Success' | wc -l)" -ne "1" ]; do echo "Failed writing! Will retry..."; sleep 30; done
+
+echo "--> Writing voice/local_subscribers_regexp $LOCAL_SUBSCRIBERS_REGEXP to $RUNNING_CONSUL ..."
+while [ "$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv put voice/local_subscribers_regexp $LOCAL_SUBSCRIBERS_REGEXP | grep 'Success' | wc -l)" -ne "1" ]; do echo "Failed writing! Will retry..."; sleep 30; done
 
 # Deploy sip-proxy
 echo "--> Deploy sip-proxy..."
@@ -132,14 +141,14 @@ export SIP_PUBLIC_IP=$(aws --region $AWS_REGION ec2 describe-instances --filters
 echo "--> Push Database params to consul..."
 
 # Now we should have the proxy's public ip, let's set it
-kubectl exec -t -n consul consul-server-0 -- /bin/consul kv put voice/proxy-public-ip $SIP_PUBLIC_IP
+kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv put voice/proxy-public-ip $SIP_PUBLIC_IP
 
-#DOMAIN=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
+#DOMAIN=$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
 
 # Variables
-DB_ADDRESS=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get backend/db_address)
-DB_USER=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get backend/db_user)
-DB_PASSWD=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get backend/db_pass)
+DB_ADDRESS=$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv get backend/db_address)
+DB_USER=$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv get backend/db_user)
+DB_PASSWD=$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv get backend/db_pass)
 # Create CDR table in viking's database via sip-proxy (which has a mysql client)
 
 until [ "1" -eq "$(kubectl get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | wc -l)" ]; do 
@@ -154,7 +163,7 @@ kubectl exec -t -n default $(kubectl get pods -o json | jq ".items[]|.metadata|s
 
 # Lets create a couple subscriber (72110000)
 POD=$(kubectl get pods -o json | jq ".items[]|.metadata|select(.name|test(\"sip-proxy.\"))|.name" | sed "s/\"//g")
-DOMAIN=$(kubectl exec -t -n consul consul-server-0 -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
+DOMAIN=$(kubectl exec -t -n consul $RUNNING_CONSUL -- /bin/consul kv get voice/proxy-public-ip | sed "s/\"//g")
 
 USER=721110000
 PASS=whatever
