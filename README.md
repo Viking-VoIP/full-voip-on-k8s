@@ -170,3 +170,8 @@ kubectl exec -ti $POD -- kamctl add $USER@$DOMAIN $PASS
 ```
 
 Or you can add them straight on the database.
+
+I put together a quick (long) video showing you how to install it.
+
+
+[![VIkingVoIP](viking-voip.jpg)](https://youtu.be/Vk4def_WvbI)
