@@ -172,7 +172,7 @@ kubectl exec -ti $POD -- kamctl add $USER@$DOMAIN $PASS
 
 If you're testing with a brand-new account (AWS), you will probably have to request a Service Quota Increase, because the default quota is not enough, we need 6 VMs, here's a video on how to do that:
 
-[![AWS Service Quota Increase](https://youtu.be/h03LzJtmXRQ)
+[![AWS Service Quota Increase](AWS_Service_Quota_Increase.png)](https://youtu.be/h03LzJtmXRQ)
 
 Or you can add them straight on the database.
 
